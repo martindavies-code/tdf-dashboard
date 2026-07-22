@@ -1,5 +1,5 @@
 {
-    "last_sync": "2026-07-22T17:25:02.168103",
+    "last_sync": "2026-07-22T17:29:34.352805",
     "events": [
         {
             "stage": 1,
@@ -109,16 +109,16 @@
         {
             "stage": 16,
             "type": "ARRIV\u00c9E",
-            "pos1": 30,
-            "pos2": 50,
-            "pos3": 15
+            "pos1": 35,
+            "pos2": 45,
+            "pos3": 14
         },
         {
             "stage": 17,
-            "type": "SPRINT INT",
-            "pos1": 7,
-            "pos2": 9,
-            "pos3": 5
+            "type": "ARRIV\u00c9E",
+            "pos1": 35,
+            "pos2": 59,
+            "pos3": 0
         }
     ]
 }
