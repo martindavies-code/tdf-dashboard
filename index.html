@@ -37,9 +37,9 @@
             transition: all 0.1s linear;
         }
 
-        .shadow-pedersen { box-shadow: 6px 6px 0px 0px #ccff00; border-color: #ccff00; }
-        .shadow-philipsen { box-shadow: 6px 6px 0px 0px #ff003c; border-color: #ff003c; }
-        .shadow-girmay { box-shadow: 6px 6px 0px 0px #00e5ff; border-color: #00e5ff; }
+        .shadow-leader { box-shadow: 6px 6px 0px 0px #ccff00; border-color: #ccff00; }
+        .shadow-second { box-shadow: 6px 6px 0px 0px #ff003c; border-color: #ff003c; }
+        .shadow-third { box-shadow: 6px 6px 0px 0px #00e5ff; border-color: #00e5ff; }
 
         ::-webkit-scrollbar { height: 12px; width: 12px; }
         ::-webkit-scrollbar-track { background: #000; border: 2px solid #27272a; }
@@ -116,48 +116,9 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="brutalist-card shadow-pedersen p-6 flex flex-col justify-between">
-                <div class="flex justify-between items-start border-b-2 border-[#ccff00]/30 pb-4 mb-4">
-                    <div class="text-xs text-black font-bold bg-[#ccff00] px-2 py-1">POS_01</div>
-                    <div class="text-[#ccff00] font-bold text-sm tracking-widest">LEADER</div>
-                </div>
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-1">B. GIRMAY</h2>
-                    <p class="text-xs text-[#ccff00] mb-6">INTERMARCHÉ-WANTY // ERI</p>
-                    <div class="text-6xl font-bold text-white tracking-tighter" id="score-pos1">
-                        -- <span class="text-lg text-zinc-600 font-normal">PTS</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="brutalist-card shadow-philipsen p-6 flex flex-col justify-between">
-                <div class="flex justify-between items-start border-b-2 border-[#ff003c]/30 pb-4 mb-4">
-                    <div class="text-xs text-black font-bold bg-[#ff003c] px-2 py-1">POS_02</div>
-                    <div class="text-[#ff003c] font-bold text-sm tracking-widest" id="diff-pos2">--</div>
-                </div>
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-1">J. PHILIPSEN</h2>
-                    <p class="text-xs text-[#ff003c] mb-6">ALPECIN-DECEUNINCK // BEL</p>
-                    <div class="text-6xl font-bold text-white tracking-tighter" id="score-pos2">
-                        -- <span class="text-lg text-zinc-600 font-normal">PTS</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="brutalist-card shadow-girmay p-6 flex flex-col justify-between">
-                <div class="flex justify-between items-start border-b-2 border-[#00e5ff]/30 pb-4 mb-4">
-                    <div class="text-xs text-black font-bold bg-[#00e5ff] px-2 py-1">POS_03</div>
-                    <div class="text-[#00e5ff] font-bold text-sm tracking-widest" id="diff-pos3">--</div>
-                </div>
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-1">B. COQUARD</h2>
-                    <p class="text-xs text-[#00e5ff] mb-6">COFIDIS // FRA</p>
-                    <div class="text-6xl font-bold text-white tracking-tighter" id="score-pos3">
-                        -- <span class="text-lg text-zinc-600 font-normal">PTS</span>
-                    </div>
-                </div>
-            </div>
+        <!-- DYNAMIC TOP 3 PODIUM CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="podium-cards">
+            <!-- Injected dynamically by JS -->
         </div>
 
         <div class="brutalist-card p-2 md:p-6">
@@ -256,6 +217,8 @@
             { stage: 17, type: 'ARRIVÉE', pos1: 42, pos2: 41, pos3: 5 }
         ];
 
+        let currentDataset = defaultLiveData;
+
         function toggleTerminal() {
             const terminal = document.getElementById('command-terminal');
             terminal.classList.toggle('hidden');
@@ -301,36 +264,100 @@
             toggleTerminal();
         }
 
-        let currentDataset = defaultLiveData;
-
         function processAndRenderData(eventLog) {
-            let pos1Total = 0, pos2Total = 0, pos3Total = 0;
-            let pos1IntTotal = 0, pos1FinTotal = 0;
-            let pos2IntTotal = 0, pos2FinTotal = 0;
-            let pos3IntTotal = 0, pos3FinTotal = 0;
+            // Define rider definitions with keys and visual styling
+            let riders = [
+                { id: 'B. GIRMAY', team: 'INTERMARCHÉ-WANTY // ERI', key: 'pos1', defaultColor: '#ccff00' },
+                { id: 'J. PHILIPSEN', team: 'ALPECIN-DECEUNINCK // BEL', key: 'pos2', defaultColor: '#ff003c' },
+                { id: 'B. COQUARD', team: 'COFIDIS // FRA', key: 'pos3', defaultColor: '#00e5ff' }
+            ];
+
+            // Calculate totals for each rider
+            riders.forEach(r => {
+                r.total = eventLog.reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
+                r.intTotal = eventLog.filter(ev => ev.type.includes('SPRINT INT')).reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
+                r.finTotal = eventLog.filter(ev => ev.type === 'ARRIVÉE').reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
+            });
+
+            // Sort riders descending by total points to determine dynamic podium order
+            riders.sort((a, b) => b.total - a.total);
+
+            const leaderTotal = riders[0].total;
+
+            // Render dynamic podium cards
+            const podiumContainer = document.getElementById('podium-cards');
+            podiumContainer.innerHTML = '';
+
+            riders.forEach((r, index) => {
+                const posLabel = `POS_0${index + 1}`;
+                const badgeText = index === 0 ? 'LEADER' : `${r.total - leaderTotal} PTS`;
+                const shadowClass = index === 0 ? 'shadow-leader' : (index === 1 ? 'shadow-second' : 'shadow-third');
+                const accentColor = index === 0 ? '#ccff00' : (index === 1 ? '#ff003c' : '#00e5ff');
+
+                podiumContainer.innerHTML += `
+                    <div class="brutalist-card ${shadowClass} p-6 flex flex-col justify-between">
+                        <div class="flex justify-between items-start border-b-2 pb-4 mb-4" style="border-color: ${accentColor}33;">
+                            <div class="text-xs text-black font-bold px-2 py-1" style="background-color: ${accentColor};">${posLabel}</div>
+                            <div class="font-bold text-sm tracking-widest" style="color: ${accentColor};">${badgeText}</div>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold text-white mb-1">${r.id}</h2>
+                            <p class="text-xs mb-6" style="color: ${accentColor};">${r.team}</p>
+                            <div class="text-6xl font-bold text-white tracking-tighter">
+                                ${r.total} <span class="text-lg text-zinc-600 font-normal">PTS</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
 
             const xLabels = [];
-            const pos1Data = [], pos2Data = [], pos3Data = [];
-            const pos1EventData = [], pos2EventData = [], pos3EventData = [];
-            
+            const chartDatasets = [];
+            const equalizerDatasets = [];
+
+            // Build dynamic chart datasets aligned with sorted rider positions
+            riders.forEach((r, index) => {
+                let cumulative = 0;
+                let cumData = [];
+                let eventData = [];
+
+                eventLog.forEach(ev => {
+                    if (index === 0) {
+                        let shortType = ev.type === 'ARRIVÉE' ? 'ARR' : ev.type.replace('SPRINT INT', 'INT').trim();
+                        xLabels.push(`S${ev.stage} ${shortType}`);
+                    }
+                    let pts = ev[r.key] || 0;
+                    cumulative += pts;
+                    cumData.push(cumulative);
+                    eventData.push(pts);
+                });
+
+                const color = index === 0 ? '#ccff00' : (index === 1 ? '#ff003c' : '#00e5ff');
+
+                chartDatasets.push({
+                    label: r.id,
+                    data: cumData,
+                    borderColor: color,
+                    borderWidth: 2,
+                    stepped: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 8,
+                    pointStyle: 'rect'
+                });
+
+                equalizerDatasets.push({
+                    label: r.id,
+                    data: eventData,
+                    backgroundColor: color,
+                    borderRadius: 0
+                });
+            });
+
+            // Populate Ledger Table & Diagnostic Origin
             const ledgerBody = document.getElementById('ledgerBody');
-            ledgerBody.innerHTML = ''; 
+            ledgerBody.innerHTML = '';
 
             eventLog.forEach(ev => {
-                let shortType = ev.type === 'ARRIVÉE' ? 'ARR' : ev.type.replace('SPRINT INT', 'INT').trim();
-                xLabels.push(`S${ev.stage} ${shortType}`);
-                
-                pos1Total += ev.pos1; pos2Total += ev.pos2; pos3Total += ev.pos3;
-                pos1Data.push(pos1Total); pos2Data.push(pos2Total); pos3Data.push(pos3Total);
-                
-                pos1EventData.push(ev.pos1); pos2EventData.push(ev.pos2); pos3EventData.push(ev.pos3);
-                
-                if (ev.type.includes('SPRINT INT')) {
-                    pos1IntTotal += ev.pos1; pos2IntTotal += ev.pos2; pos3IntTotal += ev.pos3;
-                } else if (ev.type === 'ARRIVÉE') {
-                    pos1FinTotal += ev.pos1; pos2FinTotal += ev.pos2; pos3FinTotal += ev.pos3;
-                }
-
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-zinc-800";
                 tr.innerHTML = `
@@ -343,13 +370,6 @@
                 ledgerBody.appendChild(tr);
             });
 
-            document.getElementById('score-pos1').innerHTML = `${pos1Total} <span class="text-lg text-zinc-600 font-normal">PTS</span>`;
-            document.getElementById('score-pos2').innerHTML = `${pos2Total} <span class="text-lg text-zinc-600 font-normal">PTS</span>`;
-            document.getElementById('score-pos3').innerHTML = `${pos3Total} <span class="text-lg text-zinc-600 font-normal">PTS</span>`;
-            
-            document.getElementById('diff-pos2').innerText = `${pos2Total - pos1Total} PTS`;
-            document.getElementById('diff-pos3').innerText = `${pos3Total - pos1Total} PTS`;
-
             Chart.defaults.font.family = "'Space Mono', monospace";
             Chart.defaults.color = '#71717a';
             
@@ -359,14 +379,7 @@
             if(lineChartInstance) lineChartInstance.destroy();
             lineChartInstance = new Chart(ctx1, {
                 type: 'line',
-                data: {
-                    labels: xLabels,
-                    datasets: [
-                        { label: 'GIRMAY', data: pos1Data, borderColor: '#ccff00', borderWidth: 2, stepped: true, pointRadius: 0, pointHoverRadius: 8, pointStyle: 'rect' },
-                        { label: 'PHILIPSEN', data: pos2Data, borderColor: '#ff003c', borderWidth: 2, stepped: true, pointRadius: 0, pointHoverRadius: 8, pointStyle: 'rect' },
-                        { label: 'COQUARD', data: pos3Data, borderColor: '#00e5ff', borderWidth: 2, stepped: true, pointRadius: 0, pointHoverRadius: 8, pointStyle: 'rect' }
-                    ]
-                },
+                data: { labels: xLabels, datasets: chartDatasets },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 12, usePointStyle: true } }, tooltip: brutalTooltip }, scales: { y: { grid: { color: '#18181b' }, ticks: { stepSize: 50 } }, x: { grid: { color: '#18181b' }, ticks: { maxRotation: 90, minRotation: 90 } } }, interaction: { mode: 'index', intersect: false } }
             });
 
@@ -374,38 +387,27 @@
             if(barChartInstance) barChartInstance.destroy();
             barChartInstance = new Chart(ctx2, {
                 type: 'bar',
-                data: {
-                    labels: xLabels,
-                    datasets: [
-                        { label: 'GIRMAY', data: pos1EventData, backgroundColor: '#ccff00', borderRadius: 0 },
-                        { label: 'PHILIPSEN', data: pos2EventData, backgroundColor: '#ff003c', borderRadius: 0 },
-                        { label: 'COQUARD', data: pos3EventData, backgroundColor: '#00e5ff', borderRadius: 0 }
-                    ]
-                },
+                data: { labels: xLabels, datasets: equalizerDatasets },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: brutalTooltip }, scales: { y: { stacked: true, grid: { display: false } }, x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 90, minRotation: 90 } } }, interaction: { mode: 'index', intersect: false } }
             });
 
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
-            [
-                { id: 'B. GIRMAY', color: 'border-[#ccff00] text-[#ccff00]', tot: pos1Total, int: pos1IntTotal, fin: pos1FinTotal },
-                { id: 'J. PHILIPSEN', color: 'border-[#ff003c] text-[#ff003c]', tot: pos2Total, int: pos2IntTotal, fin: pos2FinTotal },
-                { id: 'B. COQUARD', color: 'border-[#00e5ff] text-[#00e5ff]', tot: pos3Total, int: pos3IntTotal, fin: pos3FinTotal }
-            ].forEach(r => {
-                const pct = r.tot > 0 ? ((r.int / r.tot) * 100).toFixed(1) : "0.0";
+            riders.forEach((r, idx) => {
+                const pct = r.total > 0 ? ((r.intTotal / r.total) * 100).toFixed(1) : "0.0";
+                const colorClass = idx === 0 ? 'border-[#ccff00] text-[#ccff00]' : (idx === 1 ? 'border-[#ff003c] text-[#ff003c]' : 'border-[#00e5ff] text-[#00e5ff]');
                 tableBody.innerHTML += `
                     <tr class="hover:bg-zinc-900">
-                        <td class="px-6 py-4 font-bold border-l-4 ${r.color}">${r.id}</td>
-                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-white">${r.tot}</td>
-                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-zinc-400">${r.int}</td>
-                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-zinc-400">${r.fin}</td>
+                        <td class="px-6 py-4 font-bold border-l-4 ${colorClass}">${r.id}</td>
+                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-white">${r.total}</td>
+                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-zinc-400">${r.intTotal}</td>
+                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-zinc-400">${r.finTotal}</td>
                         <td class="px-6 py-4 border-l-2 border-zinc-800 text-white bg-zinc-900">${pct}%</td>
                     </tr>`;
             });
         }
 
         async function initDashboard() {
-            // 1. Try fetching races.json first (ignoring local storage override unless explicitly set)
             try {
                 const response = await fetch('./races.json?t=' + Date.now());
                 if (response.ok) {
@@ -413,14 +415,12 @@
                     currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
                     processAndRenderData(currentDataset);
                     document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
-                    console.log("[SYS] Loaded successfully from races.json:", currentDataset);
                     return;
                 }
             } catch (error) {
                 console.warn("[SYS] Fetch error on races.json:", error);
             }
 
-            // 2. Fallback to local storage override if user edited via terminal
             const override = localStorage.getItem('tdf_override_data');
             if (override) {
                 try {
@@ -433,7 +433,6 @@
                 }
             }
 
-            // 3. Ultimate fallback
             currentDataset = defaultLiveData;
             processAndRenderData(currentDataset);
             document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ff003c]">MODE_SECOURS_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
