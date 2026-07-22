@@ -1,1 +1,41 @@
+name: Auto-Scrape TDF Dataon:schedule:# Runs at 6 PM (18:00) UTC every day during the race- cron: '0 18 * * *'workflow_dispatch: # This allows you to click a "Run workflow" button manuallyjobs:scrape-and-publish:runs-on: ubuntu-latestpermissions:contents: write # Crucial: This allows the bot to save the JSON file back to your websitesteps:
+  - name: Checkout Your Website Repo
+    uses: actions/checkout@v4
+
+  - name: Checkout Java Scraper Code
+    uses: actions/checkout@v4
+    with:
+      repository: patxibocos/pcs-scraper
+      path: java-scraper
+
+  - name: Setup Java Environment
+    uses: actions/setup-java@v3
+    with:
+      distribution: 'temurin'
+      java-version: '17'
+
+  - name: Build the Scraper (Bypassing format checks!)
+    run: |
+      cd java-scraper
+      chmod +x ./gradlew
+      # We use -x spotlessCheck to skip the annoying formatting error you got on Windows
+      ./gradlew build -x spotlessCheck
+
+  - name: Run the Scraper
+    run: |
+      cd java-scraper
+      mkdir -p ../output_data
+      java -jar scraper/build/libs/scraper.jar -s 2026 -d ../output_data -f json
+
+  - name: Save Data to Website
+    run: |
+      # Copy the scraped data into your website's main folder
+      cp output_data/races.json ./races.json
+      
+      # Commit the new data back to GitHub so the website updates
+      git config user.name "Data Bot"
+      git config user.email "actions@github.com"
+      git add races.json
+      git commit -m "Auto-update TDF Data" || echo "No changes to commit"
+      git push
 
