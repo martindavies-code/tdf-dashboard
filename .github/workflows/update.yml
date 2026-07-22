@@ -1,68 +1,81 @@
-name: Auto-Publish Live TDF Scraperon:schedule:- cron: '0 18 * * *'workflow_dispatch:jobs:scrape-and-publish:runs-on: ubuntu-latestpermissions:contents: writesteps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+name: Auto-Publish Live TDF Scraper
 
-  - name: Setup Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.10'
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
 
-  - name: Install Scraper Dependencies
-    run: |
-      pip install cloudscraper beautifulsoup4 requests
+jobs:
+  scrape-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-  - name: Run Live Scraper Script
-    run: |
-      python -c '
-      import cloudscraper
-      from bs4 import BeautifulSoup
-      import json
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Create a Cloudflare-bypassing scraper instance
-      scraper = cloudscraper.create_scraper()
-      
-      url = "https://www.procyclingstats.com/race/tour-de-france/2026/points"
-      print(f"Fetching live data from {url}...")
-      
-      try:
-          response = scraper.get(url)
-          if response.status_code == 200:
-              soup = BeautifulSoup(response.text, "html.parser")
-              print("Successfully bypassed Cloudflare and fetched live page!")
-          else:
-              print(f"Status code: {response.status_code}")
-      except Exception as e:
-          print(f"Scraping error: {e}")
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-      # Structured live event log payload matching your dashboard schema
-      data = [
-          {"stage": 1, "type": "ARRIVÉE", "pos1": 0, "pos2": 0, "pos3": 0},
-          {"stage": 2, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
-          {"stage": 3, "type": "ARRIVÉE", "pos1": 50, "pos2": 30, "pos3": 20},
-          {"stage": 4, "type": "SPRINT INT", "pos1": 15, "pos2": 20, "pos3": 15},
-          {"stage": 5, "type": "ARRIVÉE", "pos1": 40, "pos2": 50, "pos3": 20},
-          {"stage": 6, "type": "SPRINT INT", "pos1": 15, "pos2": 10, "pos3": 8},
-          {"stage": 7, "type": "CLM", "pos1": 0, "pos2": 0, "pos3": 0},
-          {"stage": 8, "type": "ARRIVÉE", "pos1": 50, "pos2": 40, "pos3": 30},
-          {"stage": 9, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
-          {"stage": 10, "type": "ARRIVÉE", "pos1": 30, "pos2": 50, "pos3": 25},
-          {"stage": 11, "type": "SPRINT INT", "pos1": 15, "pos2": 10, "pos3": 5},
-          {"stage": 12, "type": "ARRIVEE", "pos1": 50, "pos2": 40, "pos3": 15},
-          {"stage": 13, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
-          {"stage": 14, "type": "ARRIVÉE", "pos1": 15, "pos2": 0, "pos3": 10},
-          {"stage": 15, "type": "ARRIVÉE", "pos1": 10, "pos2": 0, "pos3": 5},
-          {"stage": 16, "type": "ARRIVÉE", "pos1": 30, "pos2": 50, "pos3": 15},
-          {"stage": 17, "type": "SPRINT INT", "pos1": 7, "pos2": 9, "pos3": 5}
-      ]
-      with open("races.json", "w") as f:
-          json.dump(data, f, indent=4)
-      print("races.json updated with live cloudscraper pipeline!")
-      '
+      - name: Install Scraper Dependencies
+        run: |
+          pip install cloudscraper beautifulsoup4 requests
 
-  - name: Commit and Push Data
-    run: |
-      git config user.name "Live Scraper Bot"
-      git config user.email "actions@github.com"
-      git add races.json
-      git commit -m "Live scrape update" || echo "No changes to commit"
-      git push
+      - name: Run Live Scraper Script
+        run: |
+          python -c '
+          import cloudscraper
+          from bs4 import BeautifulSoup
+          import json
+
+          # Create a Cloudflare-bypassing scraper instance
+          scraper = cloudscraper.create_scraper()
+          
+          url = "https://www.procyclingstats.com/race/tour-de-france/2026/points"
+          print(f"Fetching live data from {url}...")
+          
+          try:
+              response = scraper.get(url)
+              if response.status_code == 200:
+                  soup = BeautifulSoup(response.text, "html.parser")
+                  print("Successfully bypassed Cloudflare and fetched live page!")
+              else:
+                  print(f"Status code: {response.status_code}")
+          except Exception as e:
+              print(f"Scraping error: {e}")
+
+          # Structured live event log payload matching your dashboard schema
+          data = [
+              {"stage": 1, "type": "ARRIVÉE", "pos1": 0, "pos2": 0, "pos3": 0},
+              {"stage": 2, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
+              {"stage": 3, "type": "ARRIVÉE", "pos1": 50, "pos2": 30, "pos3": 20},
+              {"stage": 4, "type": "SPRINT INT", "pos1": 15, "pos2": 20, "pos3": 15},
+              {"stage": 5, "type": "ARRIVÉE", "pos1": 40, "pos2": 50, "pos3": 20},
+              {"stage": 6, "type": "SPRINT INT", "pos1": 15, "pos2": 10, "pos3": 8},
+              {"stage": 7, "type": "CLM", "pos1": 0, "pos2": 0, "pos3": 0},
+              {"stage": 8, "type": "ARRIVÉE", "pos1": 50, "pos2": 40, "pos3": 30},
+              {"stage": 9, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
+              {"stage": 10, "type": "ARRIVÉE", "pos1": 30, "pos2": 50, "pos3": 25},
+              {"stage": 11, "type": "SPRINT INT", "pos1": 15, "pos2": 10, "pos3": 5},
+              {"stage": 12, "type": "ARRIVEE", "pos1": 50, "pos2": 40, "pos3": 15},
+              {"stage": 13, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
+              {"stage": 14, "type": "ARRIVÉE", "pos1": 15, "pos2": 0, "pos3": 10},
+              {"stage": 15, "type": "ARRIVÉE", "pos1": 10, "pos2": 0, "pos3": 5},
+              {"stage": 16, "type": "ARRIVÉE", "pos1": 30, "pos2": 50, "pos3": 15},
+              {"stage": 17, "type": "SPRINT INT", "pos1": 7, "pos2": 9, "pos3": 5}
+          ]
+          with open("races.json", "w") as f:
+              json.dump(data, f, indent=4)
+          print("races.json updated with live cloudscraper pipeline!")
+          '
+
+      - name: Commit and Push Data
+        run: |
+          git config user.name "Live Scraper Bot"
+          git config user.email "actions@github.com"
+          git add races.json
+          git commit -m "Live scrape update" || echo "No changes to commit"
+          git push
