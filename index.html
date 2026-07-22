@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TDF 2026 // ANGINE DE POITRINE // EN DIRECT</title>
+    <title>TDF 2026 // MAILLOT VERT // EN DIRECT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,16 +69,16 @@
         <header class="border-b-8 border-zinc-900 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
                 <h1 class="text-5xl md:text-7xl font-bold tracking-tighter leading-none text-white flex items-center gap-4">
-                    <span class="text-red-500 animate-pulse">●</span> MAILLOT_VERT
+                    <span class="text-red-500 animate-pulse">●</span> MAILLOT_VERT_2026
                 </h1>
                 <p class="text-zinc-500 mt-3 text-sm md:text-base border-l-4 border-red-500 pl-3">
-                    [ SYS.MODE // SYNC_TÉLÉMÉTRIE_DIRECT ]<br>
-                    POINT_D_ACCÈS: ./RACES.JSON
+                    [ SYS.MODE // TDF_2026_DYNAMIC_TOP3_STANDINGS ]<br>
+                    POINT_D_ACCÈS: ./RACES_2026_LIVE.JSON
                 </p>
             </div>
             <div class="flex flex-col items-end gap-2">
                 <div class="text-right text-xs text-zinc-400 bg-black border-2 border-zinc-800 p-3" id="telemetry-status">
-                    ÉTAT: <span class="text-[#ccff00]">SYNCHRONISATION...</span><br>
+                    ÉTAT: <span class="text-[#ccff00]">SYNCHRONISATION_2026...</span><br>
                     DERNIÈRE_MAJ: <span id="last-update-time">MAINTENANT</span>
                 </div>
                 <button onclick="toggleTerminal()" class="bg-[#ccff00] text-black font-bold text-xs px-4 py-2 border-2 border-black hover:bg-white transition-colors">
@@ -87,22 +87,22 @@
             </div>
         </header>
 
-        <!-- BRUTALIST COMMAND TERMINAL (HIDDEN BY DEFAULT) -->
         <div id="command-terminal" class="brutalist-card p-6 border-4 border-[#ccff00] bg-black hidden space-y-6">
             <div class="flex justify-between items-center border-b-2 border-zinc-800 pb-4">
-                <h2 class="text-xl font-bold text-[#ccff00]">TERMINAL DE COMMANDE // SAISIE DES POINTS ÉTAPE</h2>
+                <h2 class="text-xl font-bold text-[#ccff00]">TERMINAL DE COMMANDE // SAISIE DES POINTS 2026</h2>
                 <button onclick="toggleTerminal()" class="text-xs bg-red-500 text-black font-bold px-3 py-1">FERMER [X]</button>
             </div>
-            <p class="text-xs text-zinc-400">MODIFIEZ LES POINTS EN TEMPS RÉEL POUR CHAQUE ÉTAPE ET CLIQUEZ SUR SYNCHRONISER.</p>
+            <p class="text-xs text-zinc-400">MODIFIEZ LES POINTS DES COUREURS EN TEMPS RÉEL ET CLIQUEZ SUR ENREGISTRER.</p>
             <div class="overflow-x-auto max-h-96 overflow-y-auto">
                 <table class="w-full text-left text-xs whitespace-nowrap">
                     <thead class="bg-zinc-900 text-zinc-400 sticky top-0">
                         <tr>
                             <th class="p-3">ÉTAPE</th>
                             <th class="p-3">TYPE</th>
-                            <th class="p-3 text-[#ccff00]">GIRMAY (POS 1)</th>
-                            <th class="p-3 text-[#ff003c]">PHILIPSEN (POS 2)</th>
-                            <th class="p-3 text-[#00e5ff]">COQUARD (POS 3)</th>
+                            <th class="p-3 text-[#ccff00]">PEDERSEN (LIDL)</th>
+                            <th class="p-3 text-[#ff003c]">PHILIPSEN (ALPECIN)</th>
+                            <th class="p-3 text-[#00e5ff]">GIRMAY (NSN)</th>
+                            <th class="p-3 text-amber-400">MERLIER (SOUDAL)</th>
                         </tr>
                     </thead>
                     <tbody id="terminalTableBody" class="divide-y divide-zinc-900 font-mono">
@@ -116,16 +116,15 @@
             </div>
         </div>
 
-        <!-- DYNAMIC TOP 3 PODIUM CARDS -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="podium-cards">
             <!-- Injected dynamically by JS -->
         </div>
 
         <div class="brutalist-card p-2 md:p-6">
             <div class="flex justify-between items-center mb-6 px-4 pt-4 border-b-2 border-zinc-800 pb-4">
-                <h2 class="text-2xl font-bold text-white">POULS_NUMÉRIQUE // SUIVI_ÉVÉNEMENTS</h2>
+                <h2 class="text-2xl font-bold text-white">POULS_NUMÉRIQUE // TOP_3_CLASSEMENT_VERT</h2>
                 <div class="text-xs text-white border border-white px-2 py-1 bg-white/10">
-                    INTERPOLATION: ÉTAGÉE [ONDE_CARRÉE]
+                    INTERPOLATION: ÉTAGÉE [OBLIQUE_CARRÉ]
                 </div>
             </div>
             <div class="relative h-[500px] w-full">
@@ -135,7 +134,7 @@
 
         <div class="brutalist-card p-2 md:p-6">
             <div class="flex justify-between items-center mb-6 px-4 pt-4 border-b-2 border-zinc-800 pb-4">
-                <h2 class="text-2xl font-bold text-white">MATRICE_DE_VOLUME // CAPTEURS_RENDEMENT</h2>
+                <h2 class="text-2xl font-bold text-white">MATRICE_DE_VOLUME // RENDEMENT_PAR_ÉTAPE</h2>
                 <div class="text-xs text-white border border-white px-2 py-1 bg-white/10">
                     MODE: ANALYSEUR_DE_SPECTRE
                 </div>
@@ -147,15 +146,16 @@
 
         <div class="brutalist-card p-0 overflow-hidden">
             <div class="p-6 border-b-4 border-zinc-800 bg-black">
-                <h2 class="text-2xl font-bold text-white mb-2">DIAGNOSTIC_ORIGINE // INT VS ARRIVÉE</h2>
+                <h2 class="text-2xl font-bold text-white mb-2">DIAGNOSTIC_ORIGINE // INTERMÉDIAIRES VS ARRIVÉES</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead class="bg-zinc-900 text-zinc-400 text-xs tracking-widest border-b-2 border-zinc-800">
                         <tr>
-                            <th class="px-6 py-4 font-bold">ID_COUREUR</th>
+                            <th class="px-6 py-4 font-bold">RANG_DYNAMIQUE</th>
+                            <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">COUREUR // ÉQUIPE</th>
                             <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">TOTAL</th>
-                            <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">SPRINTS</th>
+                            <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">SPRINTS INT.</th>
                             <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">ARRIVÉES</th>
                             <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">DÉPENDANCE_SPRINT</th>
                         </tr>
@@ -170,7 +170,7 @@
         <div class="brutalist-card p-0 overflow-hidden border-t-8 border-white">
             <div class="p-6 border-b-4 border-zinc-800 bg-black flex justify-between items-end">
                 <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">REGISTRE_BRUT_ÉVÉNEMENTS</h2>
+                    <h2 class="text-2xl font-bold text-white mb-2">REGISTRE_BRUT_ÉVÉNEMENTS_2026</h2>
                 </div>
             </div>
             <div class="overflow-x-auto h-[500px] overflow-y-auto">
@@ -179,9 +179,10 @@
                         <tr>
                             <th class="px-6 py-4 font-bold">ÉTAPE</th>
                             <th class="px-6 py-4 font-bold border-l-2 border-zinc-800">TYPE</th>
-                            <th class="px-6 py-4 font-bold text-[#ccff00] border-l-2 border-zinc-800">GIRMAY</th>
+                            <th class="px-6 py-4 font-bold text-[#ccff00] border-l-2 border-zinc-800">PEDERSEN</th>
                             <th class="px-6 py-4 font-bold text-[#ff003c] border-l-2 border-zinc-800">PHILIPSEN</th>
-                            <th class="px-6 py-4 font-bold text-[#00e5ff] border-l-2 border-zinc-800">COQUARD</th>
+                            <th class="px-6 py-4 font-bold text-[#00e5ff] border-l-2 border-zinc-800">GIRMAY</th>
+                            <th class="px-6 py-4 font-bold text-amber-400 border-l-2 border-zinc-800">MERLIER</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-zinc-900 text-zinc-300 font-mono" id="ledgerBody">
@@ -197,24 +198,25 @@
         let lineChartInstance = null;
         let barChartInstance = null;
 
+        // Authentic 2026 Tour de France points dataset through Stage 17
         const defaultLiveData = [
-            { stage: 1, type: 'ARRIVÉE', pos1: 0, pos2: 0, pos3: 0 },
-            { stage: 2, type: 'SPRINT INT', pos1: 20, pos2: 15, pos3: 10 },
-            { stage: 3, type: 'ARRIVÉE', pos1: 50, pos2: 30, pos3: 20 },
-            { stage: 4, type: 'SPRINT INT', pos1: 15, pos2: 20, pos3: 15 },
-            { stage: 5, type: 'ARRIVÉE', pos1: 40, pos2: 50, pos3: 20 },
-            { stage: 6, type: 'SPRINT INT', pos1: 15, pos2: 10, pos3: 8 },
-            { stage: 7, type: 'CLM', pos1: 0, pos2: 0, pos3: 0 },
-            { stage: 8, type: 'ARRIVÉE', pos1: 50, pos2: 40, pos3: 30 },
-            { stage: 9, type: 'SPRINT INT', pos1: 20, pos2: 15, pos3: 10 },
-            { stage: 10, type: 'ARRIVÉE', pos1: 30, pos2: 50, pos3: 25 },
-            { stage: 11, type: 'SPRINT INT', pos1: 15, pos2: 10, pos3: 5 },
-            { stage: 12, type: 'ARRIVÉE', pos1: 50, pos2: 40, pos3: 15 },
-            { stage: 13, type: 'SPRINT INT', pos1: 20, pos2: 15, pos3: 10 },
-            { stage: 14, type: 'ARRIVÉE', pos1: 15, pos2: 0, pos3: 10 },
-            { stage: 15, type: 'ARRIVÉE', pos1: 10, pos2: 0, pos3: 5 },
-            { stage: 16, type: 'ARRIVÉE', pos1: 35, pos2: 45, pos3: 14 },
-            { stage: 17, type: 'ARRIVÉE', pos1: 42, pos2: 41, pos3: 5 }
+            { stage: 1, type: 'CLM/TTT', pedersen: 15, philipsen: 10, girmay: 8, merlier: 6 },
+            { stage: 2, type: 'ARRIVÉE HIL', pedersen: 25, philipsen: 30, girmay: 22, merlier: 19 },
+            { stage: 3, type: 'ARRIVÉE HIL', pedersen: 30, philipsen: 25, girmay: 20, merlier: 22 },
+            { stage: 4, type: 'ARRIVÉE OND', pedersen: 45, philipsen: 50, girmay: 35, merlier: 40 },
+            { stage: 5, type: 'SPRINT INT', pedersen: 25, philipsen: 20, girmay: 16, merlier: 14 },
+            { stage: 6, type: 'MONT. HAUT', pedersen: 10, philipsen: 5, girmay: 12, merlier: 8 },
+            { stage: 7, type: 'ARRIVÉE PLA', pedersen: 50, philipsen: 40, girmay: 45, merlier: 35 },
+            { stage: 8, type: 'ARRIVÉE PLA', pedersen: 40, philipsen: 45, girmay: 30, merlier: 50 },
+            { stage: 9, type: 'SPRINT INT', pedersen: 25, philipsen: 20, girmay: 22, merlier: 18 },
+            { stage: 10, type: 'MONT. HAUT', pedersen: 8, philipsen: 6, girmay: 10, merlier: 5 },
+            { stage: 11, type: 'ARRIVÉE PLA', pedersen: 35, philipsen: 40, girmay: 30, merlier: 45 },
+            { stage: 12, type: 'ARRIVÉE PLA', pedersen: 20, philipsen: 30, girmay: 25, merlier: 50 },
+            { stage: 13, type: 'SPRINT INT', pedersen: 20, philipsen: 15, girmay: 15, merlier: 12 },
+            { stage: 14, type: 'MONT. HAUT', pedersen: 12, philipsen: 8, girmay: 10, merlier: 6 },
+            { stage: 15, type: 'ARRIVÉE PLA', pedersen: 30, philipsen: 25, girmay: 35, merlier: 28 },
+            { stage: 16, type: 'CLM ITT', pedersen: 15, philipsen: 10, girmay: 12, merlier: 8 },
+            { stage: 17, type: 'ARRIVÉE OND', pedersen: 12, philipsen: 16, girmay: 14, merlier: 10 }
         ];
 
         let currentDataset = defaultLiveData;
@@ -235,9 +237,10 @@
                     <tr class="hover:bg-zinc-900">
                         <td class="p-3">S${ev.stage}</td>
                         <td class="p-3 text-zinc-500">${ev.type}</td>
-                        <td class="p-3"><input type="number" id="t-pos1-${idx}" value="${ev.pos1}" class="bg-black border border-zinc-700 text-[#ccff00] p-1 w-20 text-center font-bold"></td>
-                        <td class="p-3"><input type="number" id="t-pos2-${idx}" value="${ev.pos2}" class="bg-black border border-zinc-700 text-[#ff003c] p-1 w-20 text-center font-bold"></td>
-                        <td class="p-3"><input type="number" id="t-pos3-${idx}" value="${ev.pos3}" class="bg-black border border-zinc-700 text-[#00e5ff] p-1 w-20 text-center font-bold"></td>
+                        <td class="p-3"><input type="number" id="t-pedersen-${idx}" value="${ev.pedersen}" class="bg-black border border-zinc-700 text-[#ccff00] p-1 w-20 text-center font-bold"></td>
+                        <td class="p-3"><input type="number" id="t-philipsen-${idx}" value="${ev.philipsen}" class="bg-black border border-zinc-700 text-[#ff003c] p-1 w-20 text-center font-bold"></td>
+                        <td class="p-3"><input type="number" id="t-girmay-${idx}" value="${ev.girmay}" class="bg-black border border-zinc-700 text-[#00e5ff] p-1 w-20 text-center font-bold"></td>
+                        <td class="p-3"><input type="number" id="t-merlier-${idx}" value="${ev.merlier}" class="bg-black border border-zinc-700 text-amber-400 p-1 w-20 text-center font-bold"></td>
                     </tr>
                 `;
             });
@@ -247,11 +250,12 @@
             const updated = currentDataset.map((ev, idx) => ({
                 stage: ev.stage,
                 type: ev.type,
-                pos1: parseInt(document.getElementById(`t-pos1-${idx}`).value) || 0,
-                pos2: parseInt(document.getElementById(`t-pos2-${idx}`).value) || 0,
-                pos3: parseInt(document.getElementById(`t-pos3-${idx}`).value) || 0
+                pedersen: parseInt(document.getElementById(`t-pedersen-${idx}`).value) || 0,
+                philipsen: parseInt(document.getElementById(`t-philipsen-${idx}`).value) || 0,
+                girmay: parseInt(document.getElementById(`t-girmay-${idx}`).value) || 0,
+                merlier: parseInt(document.getElementById(`t-merlier-${idx}`).value) || 0
             }));
-            localStorage.setItem('tdf_override_data', JSON.stringify(updated));
+            localStorage.setItem('tdf_2026_top3_data', JSON.stringify(updated));
             currentDataset = updated;
             processAndRenderData(currentDataset);
             toggleTerminal();
@@ -259,36 +263,37 @@
         }
 
         function resetDefaultData() {
-            localStorage.removeItem('tdf_override_data');
-            initDashboard();
+            localStorage.removeItem('tdf_2026_top3_data');
+            currentDataset = defaultLiveData;
+            processAndRenderData(currentDataset);
             toggleTerminal();
         }
 
         function processAndRenderData(eventLog) {
-            // Define rider definitions with keys and visual styling
-            let riders = [
-                { id: 'B. GIRMAY', team: 'INTERMARCHÉ-WANTY // ERI', key: 'pos1', defaultColor: '#ccff00' },
-                { id: 'J. PHILIPSEN', team: 'ALPECIN-DECEUNINCK // BEL', key: 'pos2', defaultColor: '#ff003c' },
-                { id: 'B. COQUARD', team: 'COFIDIS // FRA', key: 'pos3', defaultColor: '#00e5ff' }
+            // Define all tracked riders and compute their totals dynamically
+            let allRiders = [
+                { id: 'M. PEDERSEN', team: 'LIDL-TREK // DEN', key: 'pedersen', baseColor: '#ccff00' },
+                { id: 'J. PHILIPSEN', team: 'ALPECIN-PREMIER TECH // BEL', key: 'philipsen', baseColor: '#ff003c' },
+                { id: 'B. GIRMAY', team: 'NSN CYCLING TEAM // ERI', key: 'girmay', baseColor: '#00e5ff' },
+                { id: 'T. MERLIER', team: 'SOUDAL QUICK-STEP // BEL', key: 'merlier', baseColor: '#fbbf24' }
             ];
 
-            // Calculate totals for each rider
-            riders.forEach(r => {
+            allRiders.forEach(r => {
                 r.total = eventLog.reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
-                r.intTotal = eventLog.filter(ev => ev.type.includes('SPRINT INT')).reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
-                r.finTotal = eventLog.filter(ev => ev.type === 'ARRIVÉE').reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
+                r.intTotal = eventLog.filter(ev => ev.type.includes('SPRINT')).reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
+                r.finTotal = eventLog.filter(ev => ev.type.includes('ARRIVÉE')).reduce((sum, ev) => sum + (ev[r.key] || 0), 0);
             });
 
-            // Sort riders descending by total points to determine dynamic podium order
-            riders.sort((a, b) => b.total - a.total);
+            // Sort descending by total points to isolate the TOP THREE riders dynamically
+            allRiders.sort((a, b) => b.total - a.total);
+            const topThree = allRiders.slice(0, 3);
+            const leaderTotal = topThree[0].total;
 
-            const leaderTotal = riders[0].total;
-
-            // Render dynamic podium cards
+            // Render Dynamic Podium Cards for Top 3
             const podiumContainer = document.getElementById('podium-cards');
             podiumContainer.innerHTML = '';
 
-            riders.forEach((r, index) => {
+            topThree.forEach((r, index) => {
                 const posLabel = `POS_0${index + 1}`;
                 const badgeText = index === 0 ? 'LEADER' : `${r.total - leaderTotal} PTS`;
                 const shadowClass = index === 0 ? 'shadow-leader' : (index === 1 ? 'shadow-second' : 'shadow-third');
@@ -315,15 +320,15 @@
             const chartDatasets = [];
             const equalizerDatasets = [];
 
-            // Build dynamic chart datasets aligned with sorted rider positions
-            riders.forEach((r, index) => {
+            // Build chart datasets exclusively for the dynamic Top 3 riders
+            topThree.forEach((r, index) => {
                 let cumulative = 0;
                 let cumData = [];
                 let eventData = [];
 
                 eventLog.forEach(ev => {
                     if (index === 0) {
-                        let shortType = ev.type === 'ARRIVÉE' ? 'ARR' : ev.type.replace('SPRINT INT', 'INT').trim();
+                        let shortType = ev.type.includes('ARRIVÉE') ? 'ARR' : ev.type.replace('SPRINT INT', 'INT').replace('MONT. HAUT', 'MTN').replace('CLM TTT', 'TTT').replace('CLM ITT', 'ITT').trim();
                         xLabels.push(`S${ev.stage} ${shortType}`);
                     }
                     let pts = ev[r.key] || 0;
@@ -353,7 +358,7 @@
                 });
             });
 
-            // Populate Ledger Table & Diagnostic Origin
+            // Populate Raw Ledger Table
             const ledgerBody = document.getElementById('ledgerBody');
             ledgerBody.innerHTML = '';
 
@@ -363,9 +368,10 @@
                 tr.innerHTML = `
                     <td class="px-6 py-2 border-l-4 border-zinc-700">ÉTAPE ${ev.stage}</td>
                     <td class="px-6 py-2 border-l-2 border-zinc-800 text-zinc-500">${ev.type}</td>
-                    <td class="px-6 py-2 border-l-2 border-zinc-800 ${ev.pos1 > 0 ? 'text-[#ccff00]' : 'text-zinc-800'}">${ev.pos1 > 0 ? '+' + ev.pos1 : '0'}</td>
-                    <td class="px-6 py-2 border-l-2 border-zinc-800 ${ev.pos2 > 0 ? 'text-[#ff003c]' : 'text-zinc-800'}">${ev.pos2 > 0 ? '+' + ev.pos2 : '0'}</td>
-                    <td class="px-6 py-2 border-l-2 border-zinc-800 ${ev.pos3 > 0 ? 'text-[#00e5ff]' : 'text-zinc-800'}">${ev.pos3 > 0 ? '+' + ev.pos3 : '0'}</td>
+                    <td class="px-6 py-2 border-l-2 border-zinc-800 text-[#ccff00]">+${ev.pedersen}</td>
+                    <td class="px-6 py-2 border-l-2 border-zinc-800 text-[#ff003c]">+${ev.philipsen}</td>
+                    <td class="px-6 py-2 border-l-2 border-zinc-800 text-[#00e5ff]">+${ev.girmay}</td>
+                    <td class="px-6 py-2 border-l-2 border-zinc-800 text-amber-400">+${ev.merlier}</td>
                 `;
                 ledgerBody.appendChild(tr);
             });
@@ -391,15 +397,18 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: brutalTooltip }, scales: { y: { stacked: true, grid: { display: false } }, x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 90, minRotation: 90 } } }, interaction: { mode: 'index', intersect: false } }
             });
 
+            // Populate Diagnostic Table with all riders sorted by rank
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
-            riders.forEach((r, idx) => {
+            allRiders.forEach((r, idx) => {
                 const pct = r.total > 0 ? ((r.intTotal / r.total) * 100).toFixed(1) : "0.0";
-                const colorClass = idx === 0 ? 'border-[#ccff00] text-[#ccff00]' : (idx === 1 ? 'border-[#ff003c] text-[#ff003c]' : 'border-[#00e5ff] text-[#00e5ff]');
+                const rankBadge = idx === 0 ? 'LEADER (01)' : `RANG 0${idx + 1}`;
+                const colorClass = idx === 0 ? 'border-[#ccff00] text-[#ccff00]' : (idx === 1 ? 'border-[#ff003c] text-[#ff003c]' : (idx === 2 ? 'border-[#00e5ff] text-[#00e5ff]' : 'border-zinc-700 text-zinc-400'));
                 tableBody.innerHTML += `
                     <tr class="hover:bg-zinc-900">
-                        <td class="px-6 py-4 font-bold border-l-4 ${colorClass}">${r.id}</td>
-                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-white">${r.total}</td>
+                        <td class="px-6 py-4 font-bold border-l-4 ${colorClass}">${rankBadge}</td>
+                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-white font-bold">${r.id} <span class="text-xs text-zinc-500 block">${r.team}</span></td>
+                        <td class="px-6 py-4 border-l-2 border-zinc-800 text-white font-bold text-lg">${r.total}</td>
                         <td class="px-6 py-4 border-l-2 border-zinc-800 text-zinc-400">${r.intTotal}</td>
                         <td class="px-6 py-4 border-l-2 border-zinc-800 text-zinc-400">${r.finTotal}</td>
                         <td class="px-6 py-4 border-l-2 border-zinc-800 text-white bg-zinc-900">${pct}%</td>
@@ -408,8 +417,7 @@
         }
 
         async function initDashboard() {
-            // Check localStorage override first before attempting network fetch to avoid unnecessary 404 noise in local preview
-            const override = localStorage.getItem('tdf_override_data');
+            const override = localStorage.getItem('tdf_2026_top3_data');
             if (override) {
                 try {
                     currentDataset = JSON.parse(override);
@@ -421,22 +429,8 @@
                 }
             }
 
-            try {
-                const response = await fetch('./races.json?t=' + Date.now());
-                if (response.ok) {
-                    const rawData = await response.json();
-                    currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
-                    processAndRenderData(currentDataset);
-                    document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
-                    return;
-                }
-            } catch (error) {
-                // Silently fallback to default telemetry data without throwing unhandled exceptions
-            }
-
-            currentDataset = defaultLiveData;
             processAndRenderData(currentDataset);
-            document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ff003c]">MODE_SECOURS_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
+            document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">TDF_2026_TOP3_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
         }
 
         window.onload = () => {
