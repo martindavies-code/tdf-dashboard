@@ -202,7 +202,6 @@
         let lineChartInstance = null;
         let barChartInstance = null;
 
-        // Fallback dataset (Verified 2024 results for robust offline testing)
         const fallbackData = [
             { stage: 1, type: 'ARRIVÉE', pos1: 0, pos2: 0, pos3: 0 },
             { stage: 2, type: 'SPRINT INT', pos1: 20, pos2: 15, pos3: 10 },
@@ -331,10 +330,14 @@
             try {
                 statusEl.innerHTML = `ÉTAT: <span class="text-blue-500 animate-pulse">LECTURE_RACES_JSON...</span><br>DERNIÈRE_MAJ: <span id="last-update-time">EN_COURS</span>`;
                 
-                const response = await fetch('./races.json');
+                // Cache-buster query param prevents browser caching old JSON
+                const response = await fetch('./races.json?t=' + Date.now());
                 if (!response.ok) throw new Error("Fichier races.json introuvable");
                 
-                const liveData = await response.json();
+                const rawData = await response.json();
+                // Robustly handle both raw array or wrapped object format
+                const liveData = Array.isArray(rawData) ? rawData : (rawData.events || fallbackData);
+                
                 processAndRenderData(liveData);
                 
                 const now = new Date();
