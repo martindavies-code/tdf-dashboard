@@ -408,19 +408,7 @@
         }
 
         async function initDashboard() {
-            try {
-                const response = await fetch('./races.json?t=' + Date.now());
-                if (response.ok) {
-                    const rawData = await response.json();
-                    currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
-                    processAndRenderData(currentDataset);
-                    document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
-                    return;
-                }
-            } catch (error) {
-                console.warn("[SYS] Fetch error on races.json:", error);
-            }
-
+            // Check localStorage override first before attempting network fetch to avoid unnecessary 404 noise in local preview
             const override = localStorage.getItem('tdf_override_data');
             if (override) {
                 try {
@@ -433,12 +421,30 @@
                 }
             }
 
+            try {
+                const response = await fetch('./races.json?t=' + Date.now());
+                if (response.ok) {
+                    const rawData = await response.json();
+                    currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
+                    processAndRenderData(currentDataset);
+                    document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
+                    return;
+                }
+            } catch (error) {
+                // Silently fallback to default telemetry data without throwing unhandled exceptions
+            }
+
             currentDataset = defaultLiveData;
             processAndRenderData(currentDataset);
             document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ff003c]">MODE_SECOURS_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
         }
 
         window.onload = () => {
+            if (typeof Chart === 'undefined') {
+                console.error("[SYS] Chart.js failed to load.");
+                document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-red-500">ERREUR_CHARGEMENT_LIB</span>`;
+                return;
+            }
             initDashboard();
         };
     </script>
