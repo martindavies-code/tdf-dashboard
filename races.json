@@ -1,124 +1,124 @@
 {
-    "last_sync": "2026-07-22T17:31:30.999071",
+    "last_sync": "2026-07-22T17:35:33.693885",
     "events": [
         {
             "stage": 1,
-            "type": "ARRIV\u00c9E",
-            "pos1": 0,
-            "pos2": 0,
-            "pos3": 0
+            "type": "SPRINT INT",
+            "pos1": 38,
+            "pos2": 47,
+            "pos3": 15
         },
         {
             "stage": 2,
-            "type": "SPRINT INT",
-            "pos1": 20,
-            "pos2": 15,
-            "pos3": 10
-        },
-        {
-            "stage": 3,
             "type": "ARRIV\u00c9E",
-            "pos1": 50,
-            "pos2": 30,
+            "pos1": 41,
+            "pos2": 49,
             "pos3": 20
         },
         {
-            "stage": 4,
+            "stage": 3,
             "type": "SPRINT INT",
-            "pos1": 15,
-            "pos2": 20,
+            "pos1": 44,
+            "pos2": 51,
+            "pos3": 10
+        },
+        {
+            "stage": 4,
+            "type": "ARRIV\u00c9E",
+            "pos1": 47,
+            "pos2": 45,
             "pos3": 15
         },
         {
             "stage": 5,
-            "type": "ARRIV\u00c9E",
-            "pos1": 40,
-            "pos2": 50,
+            "type": "SPRINT INT",
+            "pos1": 35,
+            "pos2": 47,
             "pos3": 20
         },
         {
             "stage": 6,
-            "type": "SPRINT INT",
-            "pos1": 15,
-            "pos2": 10,
-            "pos3": 8
+            "type": "ARRIV\u00c9E",
+            "pos1": 38,
+            "pos2": 49,
+            "pos3": 10
         },
         {
             "stage": 7,
-            "type": "CLM",
-            "pos1": 0,
-            "pos2": 0,
-            "pos3": 0
+            "type": "SPRINT INT",
+            "pos1": 41,
+            "pos2": 51,
+            "pos3": 15
         },
         {
             "stage": 8,
             "type": "ARRIV\u00c9E",
-            "pos1": 50,
-            "pos2": 40,
-            "pos3": 30
+            "pos1": 44,
+            "pos2": 45,
+            "pos3": 20
         },
         {
             "stage": 9,
             "type": "SPRINT INT",
-            "pos1": 20,
-            "pos2": 15,
+            "pos1": 47,
+            "pos2": 47,
             "pos3": 10
         },
         {
             "stage": 10,
             "type": "ARRIV\u00c9E",
-            "pos1": 30,
-            "pos2": 50,
-            "pos3": 25
+            "pos1": 35,
+            "pos2": 49,
+            "pos3": 15
         },
         {
             "stage": 11,
             "type": "SPRINT INT",
-            "pos1": 15,
-            "pos2": 10,
-            "pos3": 5
+            "pos1": 38,
+            "pos2": 51,
+            "pos3": 20
         },
         {
             "stage": 12,
             "type": "ARRIV\u00c9E",
-            "pos1": 50,
-            "pos2": 40,
-            "pos3": 15
+            "pos1": 41,
+            "pos2": 45,
+            "pos3": 10
         },
         {
             "stage": 13,
             "type": "SPRINT INT",
-            "pos1": 20,
-            "pos2": 15,
-            "pos3": 10
+            "pos1": 44,
+            "pos2": 47,
+            "pos3": 15
         },
         {
             "stage": 14,
             "type": "ARRIV\u00c9E",
-            "pos1": 15,
-            "pos2": 0,
-            "pos3": 10
+            "pos1": 47,
+            "pos2": 49,
+            "pos3": 20
         },
         {
             "stage": 15,
-            "type": "ARRIV\u00c9E",
-            "pos1": 10,
-            "pos2": 0,
-            "pos3": 5
+            "type": "SPRINT INT",
+            "pos1": 35,
+            "pos2": 51,
+            "pos3": 10
         },
         {
             "stage": 16,
             "type": "ARRIV\u00c9E",
-            "pos1": 35,
+            "pos1": 38,
             "pos2": 45,
-            "pos3": 14
+            "pos3": 15
         },
         {
             "stage": 17,
-            "type": "ARRIV\u00c9E",
-            "pos1": 35,
-            "pos2": 59,
-            "pos3": 0
+            "type": "SPRINT INT",
+            "pos1": 41,
+            "pos2": 47,
+            "pos3": 20
         }
     ]
 }
