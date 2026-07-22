@@ -20,26 +20,29 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Elite Scraping Engine
+      - name: Install Elite Dependencies
         run: |
-          pip install procyclingstats beautifulsoup4 requests
+          pip install cloudscraper procyclingstats beautifulsoup4 requests
 
-      - name: Run L33T ProCyclingStats Pipeline
+      - name: Run Monkeypatched L33T Scraper
         run: |
           python -c '
           import json
           import sys
+          import requests
+          import cloudscraper
+
+          # L33T Monkeypatch: Force procyclingstats requests to route through cloudscraper
+          requests.Session = cloudscraper.create_scraper
+          print("[L33T_SYS] Monkeypatched requests.Session with cloudscraper engine.")
+
           from procyclingstats import Race
 
-          print("[L33T_SYS] Initializing ProCyclingStats API wrapper...")
           try:
-              # Querying official Tour de France 2026 race object
+              print("[L33T_SYS] Connecting to ProCyclingStats TDF 2026 feed...")
               race = Race("race/tour-de-france/2026")
-              print("[L33T_SYS] Successfully connected to ProCyclingStats Tour de France 2026 feed!")
-              
-              # Attempting to fetch stage results or classification data
               stages = race.stages() if hasattr(race, "stages") else []
-              print(f"[L33T_SYS] Retrieved {len(stages)} stage records from live feed.")
+              print(f"[L33T_SYS] Successfully bypassed Cloudflare! Retrieved {len(stages)} stages.")
 
               live_payload = []
               for idx, stage in enumerate(stages, start=1):
@@ -52,14 +55,14 @@ jobs:
                   })
 
               if not live_payload:
-                  raise ValueError("Parsed payload is empty.")
+                  raise ValueError("Empty stage payload returned.")
 
               with open("races.json", "w") as f:
                   json.dump(live_payload, f, indent=4)
-              print("[L33T_SYS] races.json successfully updated with live API telemetry!")
+              print("[L33T_SYS] races.json updated successfully with live scraped data!")
 
           except Exception as e:
-              print(f"[CRITICAL ERROR] Live telemetry extraction failed: {e}")
+              print(f"[CRITICAL ERROR] Scrape failed: {e}")
               sys.exit(1)
           '
 
@@ -68,5 +71,5 @@ jobs:
           git config user.name "L33T Scraper Bot"
           git config user.email "actions@github.com"
           git add races.json
-          git commit -m "L33T live telemetry sync" || echo "No changes to commit"
+          git commit -m "L33T monkeypatched live sync update" || echo "No changes to commit"
           git push
