@@ -76,11 +76,45 @@
                     POINT_D_ACCÈS: ./RACES.JSON
                 </p>
             </div>
-            <div class="text-right text-xs text-zinc-400 bg-black border-2 border-zinc-800 p-3" id="telemetry-status">
-                ÉTAT: <span class="text-yellow-500 animate-pulse">SYNCHRONISATION...</span><br>
-                DERNIÈRE_MAJ: <span id="last-update-time">EN_ATTENTE</span>
+            <div class="flex flex-col items-end gap-2">
+                <div class="text-right text-xs text-zinc-400 bg-black border-2 border-zinc-800 p-3" id="telemetry-status">
+                    ÉTAT: <span class="text-[#ccff00]">SYNCHRONISATION...</span><br>
+                    DERNIÈRE_MAJ: <span id="last-update-time">MAINTENANT</span>
+                </div>
+                <button onclick="toggleTerminal()" class="bg-[#ccff00] text-black font-bold text-xs px-4 py-2 border-2 border-black hover:bg-white transition-colors">
+                    [ + ] OUVRIR_TERMINAL_DE_SAISIE
+                </button>
             </div>
         </header>
+
+        <!-- BRUTALIST COMMAND TERMINAL (HIDDEN BY DEFAULT) -->
+        <div id="command-terminal" class="brutalist-card p-6 border-4 border-[#ccff00] bg-black hidden space-y-6">
+            <div class="flex justify-between items-center border-b-2 border-zinc-800 pb-4">
+                <h2 class="text-xl font-bold text-[#ccff00]">TERMINAL DE COMMANDE // SAISIE DES POINTS ÉTAPE</h2>
+                <button onclick="toggleTerminal()" class="text-xs bg-red-500 text-black font-bold px-3 py-1">FERMER [X]</button>
+            </div>
+            <p class="text-xs text-zinc-400">MODIFIEZ LES POINTS EN TEMPS RÉEL POUR CHAQUE ÉTAPE ET CLIQUEZ SUR SYNCHRONISER.</p>
+            <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                <table class="w-full text-left text-xs whitespace-nowrap">
+                    <thead class="bg-zinc-900 text-zinc-400 sticky top-0">
+                        <tr>
+                            <th class="p-3">ÉTAPE</th>
+                            <th class="p-3">TYPE</th>
+                            <th class="p-3 text-[#ccff00]">GIRMAY (POS 1)</th>
+                            <th class="p-3 text-[#ff003c]">PHILIPSEN (POS 2)</th>
+                            <th class="p-3 text-[#00e5ff]">COQUARD (POS 3)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="terminalTableBody" class="divide-y divide-zinc-900 font-mono">
+                        <!-- Injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex gap-4 pt-4 border-t-2 border-zinc-800">
+                <button onclick="saveTerminalData()" class="bg-[#ccff00] text-black font-bold px-6 py-3 text-sm hover:bg-white">ENREGISTRER & APPLIQUER</button>
+                <button onclick="resetDefaultData()" class="bg-zinc-800 text-white font-bold px-6 py-3 text-sm hover:bg-zinc-700">RÉINITIALISER PAR DÉFAUT</button>
+            </div>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="brutalist-card shadow-pedersen p-6 flex flex-col justify-between">
@@ -202,7 +236,7 @@
         let lineChartInstance = null;
         let barChartInstance = null;
 
-        const fallbackData = [
+        const defaultLiveData = [
             { stage: 1, type: 'ARRIVÉE', pos1: 0, pos2: 0, pos3: 0 },
             { stage: 2, type: 'SPRINT INT', pos1: 20, pos2: 15, pos3: 10 },
             { stage: 3, type: 'ARRIVÉE', pos1: 50, pos2: 30, pos3: 20 },
@@ -221,6 +255,53 @@
             { stage: 16, type: 'ARRIVÉE', pos1: 30, pos2: 50, pos3: 15 },
             { stage: 17, type: 'SPRINT INT', pos1: 7, pos2: 9, pos3: 5 }
         ];
+
+        function toggleTerminal() {
+            const terminal = document.getElementById('command-terminal');
+            terminal.classList.toggle('hidden');
+            if (!terminal.classList.contains('hidden')) {
+                populateTerminal();
+            }
+        }
+
+        function populateTerminal() {
+            const tbody = document.getElementById('terminalTableBody');
+            tbody.innerHTML = '';
+            currentDataset.forEach((ev, idx) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-zinc-900">
+                        <td class="p-3">S${ev.stage}</td>
+                        <td class="p-3 text-zinc-500">${ev.type}</td>
+                        <td class="p-3"><input type="number" id="t-pos1-${idx}" value="${ev.pos1}" class="bg-black border border-zinc-700 text-[#ccff00] p-1 w-20 text-center font-bold"></td>
+                        <td class="p-3"><input type="number" id="t-pos2-${idx}" value="${ev.pos2}" class="bg-black border border-zinc-700 text-[#ff003c] p-1 w-20 text-center font-bold"></td>
+                        <td class="p-3"><input type="number" id="t-pos3-${idx}" value="${ev.pos3}" class="bg-black border border-zinc-700 text-[#00e5ff] p-1 w-20 text-center font-bold"></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function saveTerminalData() {
+            const updated = currentDataset.map((ev, idx) => ({
+                stage: ev.stage,
+                type: ev.type,
+                pos1: parseInt(document.getElementById(`t-pos1-${idx}`).value) || 0,
+                pos2: parseInt(document.getElementById(`t-pos2-${idx}`).value) || 0,
+                pos3: parseInt(document.getElementById(`t-pos3-${idx}`).value) || 0
+            }));
+            localStorage.setItem('tdf_override_data', JSON.stringify(updated));
+            currentDataset = updated;
+            processAndRenderData(currentDataset);
+            toggleTerminal();
+            document.getElementById('last-update-time').innerText = new Date().toLocaleTimeString('fr-FR', { hour12: false });
+        }
+
+        function resetDefaultData() {
+            localStorage.removeItem('tdf_override_data');
+            initDashboard();
+            toggleTerminal();
+        }
+
+        let currentDataset = defaultLiveData;
 
         function processAndRenderData(eventLog) {
             let pos1Total = 0, pos2Total = 0, pos3Total = 0;
@@ -323,37 +404,44 @@
             });
         }
 
-        async function fetchLiveTelemetry() {
-            const statusEl = document.getElementById('telemetry-status');
-            const timeEl = document.getElementById('last-update-time');
-            
+        async function initDashboard() {
+            // Prioritize fetching fresh races.json over stale localStorage
             try {
-                statusEl.innerHTML = `ÉTAT: <span class="text-blue-500 animate-pulse">LECTURE_RACES_JSON...</span><br>DERNIÈRE_MAJ: <span id="last-update-time">EN_COURS</span>`;
-                
-                // Cache-buster query param prevents browser caching old JSON
                 const response = await fetch('./races.json?t=' + Date.now());
-                if (!response.ok) throw new Error("Fichier races.json introuvable");
-                
+                if (!response.ok) throw new Error("races.json introuvable");
                 const rawData = await response.json();
-                // Robustly handle both raw array or wrapped object format
-                const liveData = Array.isArray(rawData) ? rawData : (rawData.events || fallbackData);
                 
-                processAndRenderData(liveData);
+                // Handle both raw arrays and wrapped object payloads ({ events: [...] })
+                currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
                 
-                const now = new Date();
-                statusEl.innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${now.toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
-                
+                processAndRenderData(currentDataset);
+                document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
+                return;
             } catch (error) {
-                processAndRenderData(fallbackData);
-                const now = new Date();
-                statusEl.innerHTML = `ÉTAT: <span class="text-[#ff003c]">MODE_SECOURS_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${now.toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
-                console.warn("[SYS] races.json inaccessible, affichage des données de secours.");
+                console.warn("[SYS] Échec de chargement de races.json, tentative local storage...", error);
             }
+
+            // Fallback to local storage if fetch fails
+            const override = localStorage.getItem('tdf_override_data');
+            if (override) {
+                try {
+                    currentDataset = JSON.parse(override);
+                    processAndRenderData(currentDataset);
+                    document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_LOCALES_ACTIVES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
+                    return;
+                } catch (e) {
+                    console.error("Local override parse error", e);
+                }
+            }
+
+            // Ultimate fallback
+            currentDataset = defaultLiveData;
+            processAndRenderData(currentDataset);
+            document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ff003c]">MODE_SECOURS_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
         }
 
         window.onload = () => {
-            fetchLiveTelemetry();
-            setInterval(fetchLiveTelemetry, 300000); 
+            initDashboard();
         };
     </script>
 </body>
