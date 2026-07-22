@@ -38,4 +38,3 @@ name: Auto-Scrape TDF Dataon:schedule:# Runs at 6 PM (18:00) UTC every day durin
       git add races.json
       git commit -m "Auto-update TDF Data" || echo "No changes to commit"
       git push
-
