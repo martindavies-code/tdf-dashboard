@@ -252,8 +252,8 @@
             { stage: 13, type: 'SPRINT INT', pos1: 20, pos2: 15, pos3: 10 },
             { stage: 14, type: 'ARRIVÉE', pos1: 15, pos2: 0, pos3: 10 },
             { stage: 15, type: 'ARRIVÉE', pos1: 10, pos2: 0, pos3: 5 },
-            { stage: 16, type: 'ARRIVÉE', pos1: 30, pos2: 50, pos3: 15 },
-            { stage: 17, type: 'SPRINT INT', pos1: 7, pos2: 9, pos3: 5 }
+            { stage: 16, type: 'ARRIVÉE', pos1: 35, pos2: 45, pos3: 14 },
+            { stage: 17, type: 'ARRIVÉE', pos1: 42, pos2: 41, pos3: 5 }
         ];
 
         function toggleTerminal() {
@@ -405,23 +405,22 @@
         }
 
         async function initDashboard() {
-            // Prioritize fetching fresh races.json over stale localStorage
+            // 1. Try fetching races.json first (ignoring local storage override unless explicitly set)
             try {
                 const response = await fetch('./races.json?t=' + Date.now());
-                if (!response.ok) throw new Error("races.json introuvable");
-                const rawData = await response.json();
-                
-                // Handle both raw arrays and wrapped object payloads ({ events: [...] })
-                currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
-                
-                processAndRenderData(currentDataset);
-                document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
-                return;
+                if (response.ok) {
+                    const rawData = await response.json();
+                    currentDataset = Array.isArray(rawData) ? rawData : (rawData.events || defaultLiveData);
+                    processAndRenderData(currentDataset);
+                    document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ccff00]">DONNÉES_DIRECT_SYNCHRONISÉES</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
+                    console.log("[SYS] Loaded successfully from races.json:", currentDataset);
+                    return;
+                }
             } catch (error) {
-                console.warn("[SYS] Échec de chargement de races.json, tentative local storage...", error);
+                console.warn("[SYS] Fetch error on races.json:", error);
             }
 
-            // Fallback to local storage if fetch fails
+            // 2. Fallback to local storage override if user edited via terminal
             const override = localStorage.getItem('tdf_override_data');
             if (override) {
                 try {
@@ -434,7 +433,7 @@
                 }
             }
 
-            // Ultimate fallback
+            // 3. Ultimate fallback
             currentDataset = defaultLiveData;
             processAndRenderData(currentDataset);
             document.getElementById('telemetry-status').innerHTML = `ÉTAT: <span class="text-[#ff003c]">MODE_SECOURS_ACTIF</span><br>DERNIÈRE_MAJ: <span id="last-update-time">${new Date().toLocaleTimeString('fr-FR', { hour12: false })}</span>`;
