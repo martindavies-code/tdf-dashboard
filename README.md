@@ -46,7 +46,7 @@ Access the live interactive telemetry dashboard hosted on GitHub Pages:
 
 The application is structured into decoupled ES modules:
 
-```
+```text
 ├── index.html                 # Semantic, accessible HTML5 dashboard
 ├── styles.css                 # Strict token design system
 ├── races.json                 # Stage-by-stage points telemetry
@@ -63,9 +63,11 @@ The application is structured into decoupled ES modules:
 ## Local Development & Testing
 
 ### 1. Prerequisites
+
 - Node.js (v18+)
 
 ### 2. Run Tests
+
 ```bash
 # Run unit tests
 npm test
@@ -75,10 +77,12 @@ npm run test:coverage
 ```
 
 ### 3. Run Locally
+
 ```bash
 # Start local HTTP server
 npm run serve
 # Or with Python:
 python -m http.server 3000
 ```
+
 Open [http://localhost:3000](http://localhost:3000) in your browser.
