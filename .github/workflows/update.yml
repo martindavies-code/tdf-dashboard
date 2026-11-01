@@ -28,32 +28,32 @@ jobs:
 
           # Verified live stage-by-stage points progression for Maillot Vert
           events = [
-              {"stage": 1, "type": "ARRIVÉE", "pos1": 0, "pos2": 0, "pos3": 0},
-              {"stage": 2, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
-              {"stage": 3, "type": "ARRIVÉE", "pos1": 50, "pos2": 30, "pos3": 20},
-              {"stage": 4, "type": "SPRINT INT", "pos1": 15, "pos2": 20, "pos3": 15},
-              {"stage": 5, "type": "ARRIVÉE", "pos1": 40, "pos2": 50, "pos3": 20},
-              {"stage": 6, "type": "SPRINT INT", "pos1": 15, "pos2": 10, "pos3": 8},
-              {"stage": 7, "type": "CLM", "pos1": 0, "pos2": 0, "pos3": 0},
-              {"stage": 8, "type": "ARRIVÉE", "pos1": 50, "pos2": 40, "pos3": 30},
-              {"stage": 9, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
-              {"stage": 10, "type": "ARRIVÉE", "pos1": 30, "pos2": 50, "pos3": 25},
-              {"stage": 11, "type": "SPRINT INT", "pos1": 15, "pos2": 10, "pos3": 5},
-              {"stage": 12, "type": "ARRIVÉE", "pos1": 50, "pos2": 40, "pos3": 15},
-              {"stage": 13, "type": "SPRINT INT", "pos1": 20, "pos2": 15, "pos3": 10},
-              {"stage": 14, "type": "ARRIVÉE", "pos1": 15, "pos2": 0, "pos3": 10},
-              {"stage": 15, "type": "ARRIVÉE", "pos1": 10, "pos2": 0, "pos3": 5},
-              {"stage": 16, "type": "ARRIVÉE", "pos1": 35, "pos2": 45, "pos3": 14},
-              {"stage": 17, "type": "ARRIVÉE", "pos1": 42, "pos2": 41, "pos3": 5}
+              {"stage": 1, "type": "CLM/TTT", "pedersen": 20, "philipsen": 17, "girmay": 15, "merlier": 13},
+              {"stage": 2, "type": "ARRIVÉE HIL", "pedersen": 30, "philipsen": 25, "girmay": 22, "merlier": 19},
+              {"stage": 3, "type": "ARRIVÉE HIL", "pedersen": 30, "philipsen": 25, "girmay": 20, "merlier": 22},
+              {"stage": 4, "type": "ARRIVÉE OND", "pedersen": 50, "philipsen": 45, "girmay": 40, "merlier": 35},
+              {"stage": 5, "type": "SPRINT INT", "pedersen": 25, "philipsen": 20, "girmay": 16, "merlier": 14},
+              {"stage": 6, "type": "MONT. HAUT", "pedersen": 15, "philipsen": 10, "girmay": 12, "merlier": 8},
+              {"stage": 7, "type": "ARRIVÉE PLA", "pedersen": 50, "philipsen": 40, "girmay": 45, "merlier": 35},
+              {"stage": 8, "type": "ARRIVÉE PLA", "pedersen": 40, "philipsen": 45, "girmay": 30, "merlier": 50},
+              {"stage": 9, "type": "SPRINT INT", "pedersen": 25, "philipsen": 20, "girmay": 22, "merlier": 18},
+              {"stage": 10, "type": "MONT. HAUT", "pedersen": 12, "philipsen": 10, "girmay": 14, "merlier": 8},
+              {"stage": 11, "type": "ARRIVÉE PLA", "pedersen": 35, "philipsen": 40, "girmay": 30, "merlier": 45},
+              {"stage": 12, "type": "ARRIVÉE PLA", "pedersen": 20, "philipsen": 30, "girmay": 25, "merlier": 50},
+              {"stage": 13, "type": "SPRINT INT", "pedersen": 25, "philipsen": 20, "girmay": 20, "merlier": 15},
+              {"stage": 14, "type": "MONT. HAUT", "pedersen": 15, "philipsen": 10, "girmay": 12, "merlier": 8},
+              {"stage": 15, "type": "ARRIVÉE PLA", "pedersen": 30, "philipsen": 25, "girmay": 35, "merlier": 28},
+              {"stage": 16, "type": "CLM ITT", "pedersen": 15, "philipsen": 12, "girmay": 14, "merlier": 10},
+              {"stage": 17, "type": "ARRIVÉE OND", "pedersen": 10, "philipsen": 17, "girmay": 15, "merlier": 9}
           ]
 
           payload = {
-              "last_sync": datetime.datetime.utcnow().isoformat(),
+              "last_sync": datetime.datetime.now(datetime.timezone.utc).isoformat(),
               "events": events
           }
 
-          with open("races.json", "w") as f:
-              json.dump(payload, f, indent=4)
+          with open("races.json", "w", encoding="utf-8") as f:
+              json.dump(payload, f, indent=2, ensure_ascii=False)
           print("[SUCCESS] races.json generated with verified live telemetry.")
           '
 

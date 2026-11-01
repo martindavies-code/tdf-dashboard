@@ -1,0 +1,19 @@
+{
+  "name": "tdf-dashboard",
+  "version": "1.0.0",
+  "description": "Tour de France Maillot Vert Points Classification Dashboard",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "serve": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');http.createServer((req,res)=>{let f=path.join('.',req.url==='/'?'index.html':req.url);fs.readFile(f,(err,data)=>{if(err){res.writeHead(404);res.end('Not found');}else{res.setHeader('Content-Type',f.endsWith('.js')?'application/javascript':f.endsWith('.css')?'text/css':f.endsWith('.json')?'application/json':'text/html');res.end(data);}})}).listen(3000,()=>console.log('Serving on http://localhost:3000'));\""
+  },
+  "bugs": {
+    "url": "https://github.com/martindavies-code/tdf-dashboard/issues"
+  },
+  "homepage": "https://github.com/martindavies-code/tdf-dashboard#readme",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^5.0.5",
+    "vitest": "^5.0.5"
+  }
+}
