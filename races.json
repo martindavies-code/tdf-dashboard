@@ -1,22 +1,141 @@
 {
-  "last_sync": "2026-11-01T19:25:00.000000",
+  "last_sync": "2026-11-01T21:28:44.919705+00:00",
   "events": [
-    { "stage": 1, "type": "CLM/TTT", "pedersen": 20, "philipsen": 17, "girmay": 15, "merlier": 13 },
-    { "stage": 2, "type": "ARRIVÉE HIL", "pedersen": 30, "philipsen": 25, "girmay": 22, "merlier": 19 },
-    { "stage": 3, "type": "ARRIVÉE HIL", "pedersen": 30, "philipsen": 25, "girmay": 20, "merlier": 22 },
-    { "stage": 4, "type": "ARRIVÉE OND", "pedersen": 50, "philipsen": 45, "girmay": 40, "merlier": 35 },
-    { "stage": 5, "type": "SPRINT INT", "pedersen": 25, "philipsen": 20, "girmay": 16, "merlier": 14 },
-    { "stage": 6, "type": "MONT. HAUT", "pedersen": 15, "philipsen": 10, "girmay": 12, "merlier": 8 },
-    { "stage": 7, "type": "ARRIVÉE PLA", "pedersen": 50, "philipsen": 40, "girmay": 45, "merlier": 35 },
-    { "stage": 8, "type": "ARRIVÉE PLA", "pedersen": 40, "philipsen": 45, "girmay": 30, "merlier": 50 },
-    { "stage": 9, "type": "SPRINT INT", "pedersen": 25, "philipsen": 20, "girmay": 22, "merlier": 18 },
-    { "stage": 10, "type": "MONT. HAUT", "pedersen": 12, "philipsen": 10, "girmay": 14, "merlier": 8 },
-    { "stage": 11, "type": "ARRIVÉE PLA", "pedersen": 35, "philipsen": 40, "girmay": 30, "merlier": 45 },
-    { "stage": 12, "type": "ARRIVÉE PLA", "pedersen": 20, "philipsen": 30, "girmay": 25, "merlier": 50 },
-    { "stage": 13, "type": "SPRINT INT", "pedersen": 25, "philipsen": 20, "girmay": 20, "merlier": 15 },
-    { "stage": 14, "type": "MONT. HAUT", "pedersen": 15, "philipsen": 10, "girmay": 12, "merlier": 8 },
-    { "stage": 15, "type": "ARRIVÉE PLA", "pedersen": 30, "philipsen": 25, "girmay": 35, "merlier": 28 },
-    { "stage": 16, "type": "CLM ITT", "pedersen": 15, "philipsen": 12, "girmay": 14, "merlier": 10 },
-    { "stage": 17, "type": "ARRIVÉE OND", "pedersen": 10, "philipsen": 17, "girmay": 15, "merlier": 9 }
+    {
+      "stage": 1,
+      "type": "CLM/TTT",
+      "pedersen": 20,
+      "philipsen": 17,
+      "girmay": 15,
+      "merlier": 13
+    },
+    {
+      "stage": 2,
+      "type": "ARRIVÉE HIL",
+      "pedersen": 30,
+      "philipsen": 25,
+      "girmay": 22,
+      "merlier": 19
+    },
+    {
+      "stage": 3,
+      "type": "ARRIVÉE HIL",
+      "pedersen": 30,
+      "philipsen": 25,
+      "girmay": 20,
+      "merlier": 22
+    },
+    {
+      "stage": 4,
+      "type": "ARRIVÉE OND",
+      "pedersen": 50,
+      "philipsen": 45,
+      "girmay": 40,
+      "merlier": 35
+    },
+    {
+      "stage": 5,
+      "type": "SPRINT INT",
+      "pedersen": 25,
+      "philipsen": 20,
+      "girmay": 16,
+      "merlier": 14
+    },
+    {
+      "stage": 6,
+      "type": "MONT. HAUT",
+      "pedersen": 15,
+      "philipsen": 10,
+      "girmay": 12,
+      "merlier": 8
+    },
+    {
+      "stage": 7,
+      "type": "ARRIVÉE PLA",
+      "pedersen": 50,
+      "philipsen": 40,
+      "girmay": 45,
+      "merlier": 35
+    },
+    {
+      "stage": 8,
+      "type": "ARRIVÉE PLA",
+      "pedersen": 40,
+      "philipsen": 45,
+      "girmay": 30,
+      "merlier": 50
+    },
+    {
+      "stage": 9,
+      "type": "SPRINT INT",
+      "pedersen": 25,
+      "philipsen": 20,
+      "girmay": 22,
+      "merlier": 18
+    },
+    {
+      "stage": 10,
+      "type": "MONT. HAUT",
+      "pedersen": 12,
+      "philipsen": 10,
+      "girmay": 14,
+      "merlier": 8
+    },
+    {
+      "stage": 11,
+      "type": "ARRIVÉE PLA",
+      "pedersen": 35,
+      "philipsen": 40,
+      "girmay": 30,
+      "merlier": 45
+    },
+    {
+      "stage": 12,
+      "type": "ARRIVÉE PLA",
+      "pedersen": 20,
+      "philipsen": 30,
+      "girmay": 25,
+      "merlier": 50
+    },
+    {
+      "stage": 13,
+      "type": "SPRINT INT",
+      "pedersen": 25,
+      "philipsen": 20,
+      "girmay": 20,
+      "merlier": 15
+    },
+    {
+      "stage": 14,
+      "type": "MONT. HAUT",
+      "pedersen": 15,
+      "philipsen": 10,
+      "girmay": 12,
+      "merlier": 8
+    },
+    {
+      "stage": 15,
+      "type": "ARRIVÉE PLA",
+      "pedersen": 30,
+      "philipsen": 25,
+      "girmay": 35,
+      "merlier": 28
+    },
+    {
+      "stage": 16,
+      "type": "CLM ITT",
+      "pedersen": 15,
+      "philipsen": 12,
+      "girmay": 14,
+      "merlier": 10
+    },
+    {
+      "stage": 17,
+      "type": "ARRIVÉE OND",
+      "pedersen": 10,
+      "philipsen": 17,
+      "girmay": 15,
+      "merlier": 9
+    }
   ]
 }
