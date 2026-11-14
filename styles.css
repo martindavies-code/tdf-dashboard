@@ -141,6 +141,11 @@ table td,
   color: var(--color-maillot-vert);
 }
 
+:root {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 var(--color-canvas);
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
